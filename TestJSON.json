@@ -1,0 +1,133 @@
+{
+  "string": "Hello, World!",            // String
+  "integer": 42,                        // Integer
+  "float": 3.14159,                     // Floating point number
+  "boolean_true": true,                 // Boolean true
+  "boolean_false": false,               // Boolean false
+  "null_value": null,                   // Null value
+  "array_of_strings": [                 // Array of strings
+    "apple",
+    "banana",
+    "cherry"
+  ],
+  "array_of_numbers": [                 // Array of numbers
+    1,
+    2,
+    3,
+    4.5,
+    6.78
+  ],
+  "array_of_booleans": [                // Array of booleans
+    true,
+    false,
+    true
+  ],
+  "array_of_mixed_types": [             // Array with mixed types
+    "text",
+    123,
+    true,
+    null
+  ],
+  "nested_array": [                     // Nested array
+    [1, 2, 3],
+    ["a", "b", "c"],
+    [true, false, null]
+  ],
+  "object": {                           // Object with key-value pairs
+    "first_name": "John",
+    "last_name": "Doe",
+    "age": 30,
+    "is_employee": true
+  },
+  "nested_object": {                    // Nested object
+    "person": {
+      "name": "Alice",
+      "address": {
+        "street": "123 Main St",
+        "city": "Wonderland",
+        "zipcode": 12345
+      }
+    }
+  },
+  "object_with_arrays": {               // Object containing arrays
+    "categories": ["technology", "science", "art"],
+    "ratings": [5, 4.5, 3, 2.5, 1]
+  },
+  "mixed_object_and_array": {           // Object containing array of objects
+    "products": [
+      {
+        "name": "Laptop",
+        "price": 999.99,
+        "in_stock": true
+      },
+      {
+        "name": "Smartphone",
+        "price": 599.99,
+        "in_stock": false
+      }
+    ]
+  },
+  "complex_structure": {                // More complex and deep structure
+    "company": {
+      "name": "TechCorp",
+      "departments": [
+        {
+          "name": "Development",
+          "employees": [
+            {
+              "name": "Alice",
+              "role": "Developer",
+              "languages": ["JavaScript", "Python", "C++"]
+            },
+            {
+              "name": "Bob",
+              "role": "Tester",
+              "tools": ["Selenium", "JMeter"]
+            }
+          ]
+        },
+        {
+          "name": "Marketing",
+          "employees": [
+            {
+              "name": "Charlie",
+              "role": "Manager",
+              "campaigns": ["Ad Campaign A", "Ad Campaign B"]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+{
+  "default_value": 100,                     // DEFAULT: Setting a default value
+  "number": 12345,                          // NUMBER: Standard number
+  "string": "This is a string",              // STRING: Standard string
+  "string_eol": "Text ending with \n",       // STRING EOL: String with an End of Line character (newline)
+  "property_name": {                         // PROPERTY NAME: Example of a key in JSON
+    "key1": "value1",
+    "key2": "value2"
+  },
+  "escape_sequence": "A tab character:\t",   // ESCAPE SEQUENCE: A tab escape sequence
+  "line_comment": "Line comments aren't allowed in JSON", // Line comments aren't allowed in pure JSON
+  /* "block_comment": "Also, block comments are not allowed in JSON" */ // BLOCK COMMENT: Block comments not supported in JSON
+  "operator_example": {
+    "sum": 5 + 3                             // OPERATOR: Operators like + need to be computed in code, not inside JSON itself
+  },
+  "uri": "https://example.com/resource",     // URI: Example of a Uniform Resource Identifier
+  "compact_iri": {
+    "@context": {                            // COMPACT IRI: Compact IRIs often used in Linked Data
+      "name": "http://schema.org/name",
+      "homepage": "http://schema.org/url"
+    },
+    "name": "John Doe",
+    "homepage": "https://example.org"
+  },
+  "keyword": "function",                     // KEYWORD: A keyword example (not in JSON itself, but in code)
+  "@type": "Person",                         // LD KEYWORD: Linked Data keyword (from JSON-LD)
+  "error_example": {                         // ERROR: Incorrect syntax (for demonstration)
+    "value_with_trailing_comma": [1, 2, 3,]  // ERROR: Trailing commas cause JSON errors
+  }
+}
