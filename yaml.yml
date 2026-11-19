@@ -1,5 +1,5 @@
 # ==============================================================================
-# YAML 1.2 SYNTAX HIGHLIGHTING TEST SUITE
+# YAML 1.2 SYNTAX HIGHLIGHTING TEST SUITE (PROŠIRENO: ANKORE, ALIJASI, MERGE)
 # ==============================================================================
 
 ---
@@ -26,7 +26,6 @@ float_nan: .nan
 
 boolean_true: true
 boolean_false: false
-# Napomena: u YAML 1.2 'yes', 'no', 'on', 'off' su obični stringovi (za razliku od YAML 1.1)
 yaml12_string_yes: yes
 yaml12_string_no: no
 
@@ -65,7 +64,6 @@ folded_block_strip: >-
   Folded blok bez završnog novog reda
   i sa spojenim redovima.
 
-# Indentation indicator (npr. |2 ili >2)
 indented_scalar: |2
     Ovaj blok eksplicitno zadaje uvlaku od 2 prostora
   a ovo je običan string ispod njega.
@@ -90,35 +88,47 @@ flow_sequence: ["alfa", "beta", "gama", 10, 20.5, null]
 flow_mapping: { ime: "Test", aktivan: true, verzija: 1.2, prazno: ~ }
 nested_flow: [{ a: [1, 2] }, { b: { c: "ok" } }]
 
-# Sekvenca sekvenci
 matrix_2d:
   - [1, 0, 0]
   - [0, 1, 0]
   - [0, 0, 1]
 
 # 5. ANKORE (&), ALIJASI (*) I MERGE KLJUČEVI (<<)
-defaults: &base_config
-  timeout: 30
-  retries: 3
-  logging:
-    level: info
-    format: json
+osnovna_baza: &base_db
+  host: localhost
+  port: 5432
+  pool_size: 10
+  ssl: false
 
-production:
-  <<: *base_config
-  host: prod.example.com
-  port: 443
-  logging:
-    level: warn
+bezbednosna_polisa: &security_defaults
+  ssl: true
+  tls_version: "1.3"
+  timeout: 15
 
-staging:
-  <<: *base_config
-  host: stage.example.com
-  retries: 1
+podrazumevani_portovi: &default_ports
+  - 80
+  - 443
 
-reused_value: &shared_tag "Deljena vrednost"
-copy_1: *shared_tag
-copy_2: *shared_tag
+podrazumevani_admin: &default_admin "admin@example.com"
+
+# Direktno korišćenje skalarnog i sekvencijalnog alijasa
+kontakt_email: *default_admin
+otvoreni_portovi: *default_ports
+flow_sa_alijasom: [*default_admin, "backup@example.com", *default_ports]
+
+# Merge jedne ankore
+servis_dev:
+  <<: *base_db
+  naziv: "dev-servis"
+  pool_size: 5
+
+# Merge više ankora u listi (levija ankora ima prednost nad desnom u listi,
+# dok eksplicitni ključevi u mapi imaju prednost nad merge-om)
+servis_prod:
+  naziv: "prod-servis"
+  <<: [*security_defaults, *base_db]
+  host: db.prod.example.com
+  port: 6432
 
 # 6. EKSPLICITNI TAGOVI (!!)
 explicit_str: !!str 12345
