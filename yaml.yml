@@ -1,48 +1,152 @@
-#
-#  Author: Hari Sekhon
-#  Date: 2020-03-16 14:02:53 +0000 (Mon, 16 Mar 2020)
-#
-#  vim:ts=2:sts=2:sw=2:et
-#
-#  https://github.com/HariSekhon/DevOps-Bash-tools
-#
-#  License: see accompanying Hari Sekhon LICENSE file
-#
-#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
-#
-#  https://www.linkedin.com/in/HariSekhon
-#
-
-# ============================================================================ #
-#                                B u d d y   C I
-# ============================================================================ #
-
-# https://buddy.works/docs/yaml/yaml-schema
+# ==============================================================================
+# YAML 1.2 SYNTAX HIGHLIGHTING TEST SUITE
+# ==============================================================================
 
 ---
-- pipeline: "Build"
-  trigger_mode: "ON_EVERY_PUSH"
-  ref_name: "master"
-  ref_type: "BRANCH"
-  target_site_url: "https://github.com/HariSekhon/DevOps-Bash-tools"
-  trigger_condition: "ALWAYS"
-  actions:
-    - action: "Execute: make ci test"
-      type: "BUILD"
-      working_directory: "/buddy/devops-bash-tools"
-      docker_image_name: "library/ubuntu"
-      docker_image_tag: "18.04"
-      #setup_commands:
-      # this step gets cached, which results in
-      # E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
-      #  - apt update
-      #  - apt install -qy git make
-      execute_commands:
-        - setup/ci_bootstrap.sh
-        - make init
-        - make ci
-        - make test
-      volume_mappings:
-        - "/:/buddy/devops-bash-tools"
-      shell: "BASH"
-      trigger_condition: "ALWAYS"
+# 1. OSNOVNI TIPOVI PODATAKA (SCALARS)
+string_double_quoted: "Običan tekst sa \"navodnicima\", escape sekvencama \n \t \u0041 i emoji 🚀"
+string_single_quoted: 'Jednostruki navodnici: "ne escape-uje" \n ali ''dupli apostrof'' jeste apostrof'
+string_plain: Običan ne-navodnički string bez posebnih znakova na početku
+string_with_colon: "Tekst sa dvotačkom: radi samo pod navodnicima"
+
+integer_dec: 42
+integer_neg: -128
+integer_pos: +99
+integer_underscore: 1_000_000
+integer_octal_0o: 0o755         # YAML 1.2 oktalni format
+integer_hex: 0xDEADBEEF         # Heksadecimalni format
+
+float_standard: 3.14159
+float_neg: -0.001
+float_scientific: 6.022e23
+float_scientific_neg: 1.5E-4
+float_inf: .inf
+float_neg_inf: -.inf
+float_nan: .nan
+
+boolean_true: true
+boolean_false: false
+# Napomena: u YAML 1.2 'yes', 'no', 'on', 'off' su obični stringovi (za razliku od YAML 1.1)
+yaml12_string_yes: yes
+yaml12_string_no: no
+
+null_tilde: ~
+null_word: null
+null_empty:
+
+# 2. DATUMI I VREMENA (TIMESTAMPS)
+date_only: 2026-11-19
+timestamp_iso: 2026-11-19T21:20:00+01:00
+timestamp_utc: 2026-11-19T20:20:00Z
+timestamp_space: 2026-11-19 21:20:00.500 +01:00
+
+# 3. VIŠELINIJSKI STRINGOVI (BLOCK SCALARS)
+literal_block_clip: |
+  Prvi red literal bloka.
+  Drugi red zadržava prelome linija (\n).
+  Treći red sa "navodnicima" i 'apostrofima'.
+
+literal_block_strip: |-
+  Uklanja završni novi red (chomp: strip).
+  Bez praznog reda na kraju.
+
+literal_block_keep: |+
+  Zadržava sve završne prazne redove (chomp: keep).
+
+
+folded_block_clip: >
+  Ovo je folded blok gde se pojedinačni
+  novi redovi pretvaraju u razmake,
+  dok prazni redovi ostaju novi redovi.
+
+  Novi pasus posle praznog reda.
+
+folded_block_strip: >-
+  Folded blok bez završnog novog reda
+  i sa spojenim redovima.
+
+# Indentation indicator (npr. |2 ili >2)
+indented_scalar: |2
+    Ovaj blok eksplicitno zadaje uvlaku od 2 prostora
+  a ovo je običan string ispod njega.
+
+# 4. KOLEKCIJE — SEKVENCE (LISTE) I MAPE (OBJEKTI)
+block_sequence:
+  - Prva stavka
+  - Druga stavka
+  - 123
+  - true
+  - ugnjezdena_mapa:
+      kljuc_a: vrednost_a
+      kljuc_b: [1, 2, 3]
+
+block_mapping:
+  nivo_1:
+    nivo_2:
+      nivo_3:
+        poruka: "Duboko ugnježdene mape"
+
+flow_sequence: ["alfa", "beta", "gama", 10, 20.5, null]
+flow_mapping: { ime: "Test", aktivan: true, verzija: 1.2, prazno: ~ }
+nested_flow: [{ a: [1, 2] }, { b: { c: "ok" } }]
+
+# Sekvenca sekvenci
+matrix_2d:
+  - [1, 0, 0]
+  - [0, 1, 0]
+  - [0, 0, 1]
+
+# 5. ANKORE (&), ALIJASI (*) I MERGE KLJUČEVI (<<)
+defaults: &base_config
+  timeout: 30
+  retries: 3
+  logging:
+    level: info
+    format: json
+
+production:
+  <<: *base_config
+  host: prod.example.com
+  port: 443
+  logging:
+    level: warn
+
+staging:
+  <<: *base_config
+  host: stage.example.com
+  retries: 1
+
+reused_value: &shared_tag "Deljena vrednost"
+copy_1: *shared_tag
+copy_2: *shared_tag
+
+# 6. EKSPLICITNI TAGOVI (!!)
+explicit_str: !!str 12345
+explicit_int: !!int "42"
+explicit_float: !!float "3.14"
+explicit_bool: !!bool "true"
+explicit_null: !!null "bilo sta"
+explicit_seq: !!seq [a, b, c]
+explicit_map: !!map { k1: v1, k2: v2 }
+custom_tag: !custom/widget
+  id: w-01
+  enabled: true
+
+# 7. KOMPLEKSNI KLJUČEVI (?) I KLJUČEVI SA VIŠE REDOVA
+? >
+  Ključ koji je napisan
+  kao folded blok sa više redova
+: Vrednost pridružena kompleksnom ključu
+
+? [ "kompozitni", "ključ", 1 ]
+: "Vrednost za listu kao ključ"
+
+# 8. KRAJNJI / SPECIFIČNI SLUČAJEVI (EDGE CASES)
+empty_collection_flow_seq: []
+empty_collection_flow_map: {}
+colon_before_space: "a:b/c:d" # nema razmaka posle ':' pa nije mapping separator
+hash_inside_string: "Ovo # nije komentar"
+hash_after_space: "Ovo nije komentar" # A ovo jeste komentar!
+
+...
+# KRAJ DOKUMENTA (document end marker `...`)
